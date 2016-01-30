@@ -1,0 +1,6 @@
+While editing a UI element:
+
+Press cmd+[ or ctrl+[ to move the anchors to the corners.
+Press cmd+] or ctrl+] to move the corners to the anchors.
+
+Created by Senshi on the Unity3d forums.

@@ -12,12 +12,15 @@ public class RuneActivator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		dictionary.Add("MichaelSmellsLikeCylinder", 1);
-		dictionary.Add("Pillar2", 2);
-		dictionary.Add("Pillar3", 3);
-		dictionary.Add("Pillar4", 4);
+		dictionary.Add("MichaelSmellsLikeCylinder", 5);
+		dictionary.Add("PaulEatsPoop", 1);
+		dictionary.Add("StephenLikesNickelback", 2);
+		dictionary.Add("LeonardWalksBackwards", 3);
+		dictionary.Add("CDUsesCheatCodes", 4);
 		
 		ritualdictionary.Add("1234", "TestRitual");
+		ritualdictionary.Add("1243", "Speed");
+		ritualdictionary.Add("3421", "Speed");
 		
 		
 		queue = new Queue<int>();
@@ -26,7 +29,6 @@ public class RuneActivator : MonoBehaviour {
 		queue.Enqueue(0);
 		queue.Enqueue(0);
 		queue.Enqueue(0);
-	
 	}
 	
 	// Update is called once per frame
@@ -52,6 +54,18 @@ public class RuneActivator : MonoBehaviour {
 			if( ritualdictionary.ContainsKey(queuestring)){
 				string ritualstring = ritualdictionary[queuestring];
 				Debug.Log("YAY");
+				switch (ritualstring) {
+					case "TestRitual":
+						Debug.Log("TestRitual");
+						break;
+					case "Speed":
+						gameObject.GetComponent<PlayerBehavior> ().SpeedBoost ();
+						break;
+					default:
+						Debug.Log("Should Never Happen");
+						break;
+				}
+
 				Game.manager.Foo();
 			
 			

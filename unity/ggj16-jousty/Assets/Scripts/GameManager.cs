@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour {
 	private List<GameObject> playerList;
 	private int pausingPlayer;
 	public bool isPaused = false;
+	public float timer;
+	public bool gameOver;
 
 	// Use this for initialization
 	void Awake () {
@@ -18,6 +20,8 @@ public class GameManager : MonoBehaviour {
 		game_started = true;
 		GameStart();
 		Debug.Log("Hello World");
+		gameOver = false;
+		timer = 2;
 		
 		
 	
@@ -40,7 +44,12 @@ public class GameManager : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-	
+		if (gameOver) {
+			timer -= Time.deltaTime;
+			if (timer < 0) {
+				SceneManager.LoadScene(0);
+			}
+		}
 	}
 	public void Foo() {
 	
@@ -68,8 +77,8 @@ public class GameManager : MonoBehaviour {
 		// Fancy end of level stuff here
 		// Announce winner, etc
 		// May also immediately restart scene in the future
-		SceneManager.LoadScene(0);
-	
+		//SceneManager.LoadScene(0);
+		gameOver = true;
 	}
 	
 	public void TogglePause(int player)
@@ -107,9 +116,11 @@ public class GameManager : MonoBehaviour {
 	
 		GameObject playerOne = Instantiate(JoustySapien);
 		playerOne.GetComponent<PlayerBehavior>().m_PlayerNumber = 1;
+		playerOne.GetComponent<PlayerBehavior>().ChangeColor (Color.blue);
 		playerOne.transform.position = startPositions[positionNumbers[0]];
 		GameObject playerTwo = Instantiate(JoustySapien);
 		playerTwo.GetComponent<PlayerBehavior>().m_PlayerNumber = 2;
+		playerTwo.GetComponent<PlayerBehavior>().ChangeColor (Color.red);
 		playerTwo.transform.position = startPositions[positionNumbers[1]];
 		
 		playerList = new List<GameObject>();

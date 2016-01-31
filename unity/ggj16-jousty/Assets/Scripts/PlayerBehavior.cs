@@ -4,8 +4,12 @@ using System.Collections;
 
 public class PlayerBehavior : MonoBehaviour {
 
-	public float m_Speed = 20f;
-	public float m_TurnSpeed = 6f;
+	public float m_Speed = 60f;
+	public float m_TurnSpeed = 320f;
+	public float m_DefaultSpeed = 60f;
+	public float m_DefaultTurnSpeed = 320f;
+	public float m_DashSpeed = 100f;
+	public float m_DashTurnSpeed = 160f;
 	public GameObject bodyObj;
 	private string m_VertAxisName;
 	private string m_HorizAxisName;
@@ -13,8 +17,16 @@ public class PlayerBehavior : MonoBehaviour {
 	public int m_PlayerNumber;
 	private Animator m_Animator;
 	private Transform m_Transform;
-	public int m_Health = 3;
-
+	public int m_Health = 03;
+	public AudioSource m_GruntingAudio;
+	public AudioClip m_LungingClip;
+	public AudioClip m_AltLungingClip;
+	public AudioSource m_PlayerAudio;
+	public AudioClip m_DeathClip;
+	private bool m_AmDead;
+	private float m_SpeedTimer;
+	private float m_DashTimer;
+	private Color m_DefaultColor;
 	Vector3 movement;
 	Vector3 turn;
 
@@ -23,6 +35,9 @@ public class PlayerBehavior : MonoBehaviour {
 		m_Rigidbody = GetComponent<Rigidbody> ();
 		m_Animator = GetComponent<Animator> ();
 		m_Transform = GetComponent<Transform> ();
+		m_AmDead = false;
+		m_SpeedTimer = 0;
+		m_DefaultColor = Color.white;
 	}
 
 	private void OnEnable ()
@@ -39,21 +54,73 @@ public class PlayerBehavior : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		bodyObj = transform.GetChild (0).gameObject;
 		m_VertAxisName = "Vertical" + m_PlayerNumber;
 		m_HorizAxisName = "Horizontal" + m_PlayerNumber;
 	}
+
+	public void ChangeColor(Color c)
+	{
+		m_Transform.GetChild (0).gameObject.GetComponent<Renderer> ().material.color = c;
+	}
+
+	public void SpeedBoost()
+	{
+		m_DefaultColor = m_Transform.GetChild (0).gameObject.GetComponent<Renderer> ().material.color;
+		ChangeColor (Color.yellow);
+		m_SpeedTimer = 2;
+	}
+	public void Dash()
+	{
+		m_DashTimer = 0.5f;
+	}
 	
 	// Update is called once per frame
-	void Update () {
-
+	void Update ()
+	{
+		if (m_SpeedTimer > 0) {
+			m_Speed = 120f;
+			m_TurnSpeed = 400f;
+			m_SpeedTimer -= Time.deltaTime;
+			if (m_SpeedTimer <= 0) {
+				ChangeColor (m_DefaultColor);
+				m_Speed = 60f;
+				m_TurnSpeed = 320f;
+			}
+		}
+		if (m_DashTimer > 0) {
+			m_Speed = m_DashSpeed;
+			m_TurnSpeed = m_DashTurnSpeed;
+			m_DashTimer -= Time.deltaTime;
+			if (m_DashTimer <= 0) {
+				m_Speed = m_DefaultSpeed;
+				m_TurnSpeed = m_DefaultTurnSpeed;
+			}
+			
+		
+		
+		}
 
 		float isPoke = Input.GetAxis("RightTrigger" + m_PlayerNumber);
-		if (isPoke > 0.5f) {
-			m_Animator.SetTrigger ("Attack");
+		float isDash = Input.GetAxis("LeftTrigger" + m_PlayerNumber);
+		if (isPoke > 0.5f && !m_AmDead) {
+			if (Random.value < 0.5)
+			{
+				m_GruntingAudio.clip = m_LungingClip;
+			} else {
+				m_GruntingAudio.clip = m_AltLungingClip;
+			}
+			m_GruntingAudio.Play();
+			m_Animator.SetTrigger("Attack");
 		}
-		/*
+		if (isDash > 0.5f && !m_AmDead) {
+			Debug.Log ("666");
+			//m_Animator.SetTrigger("Dash");
+			Dash();
+		}
+		/* PAUSE FUNCTIONALITY WILL BE IN FIRST DLC BUNDLE
 		bool startPressed = Input.GetButtonDown("Pause" + m_PlayerNumber);
 
 		if (startPressed)
@@ -81,11 +148,13 @@ public class PlayerBehavior : MonoBehaviour {
 		float h = Input.GetAxis(m_HorizAxisName);
 		float v = Input.GetAxis(m_VertAxisName);
 
-		Move (h, v);
+		if (!m_AmDead) {
+			Move (h, v);
+		}
 
 		float rh = Input.GetAxis("RotateX" + m_PlayerNumber);
 		float rv = Input.GetAxis("RotateY" + m_PlayerNumber);
-		if ((Mathf.Abs (rh) > 0.1f) || Mathf.Abs (rv) > 0.1f) {
+		if (((Mathf.Abs (rh) > 0.1f) || Mathf.Abs (rv) > 0.1f) && !m_AmDead) {
 			Turn (rh, rv);
 		}
 	}
@@ -118,7 +187,11 @@ public class PlayerBehavior : MonoBehaviour {
 	
 	public void Die ()
 	{
-		gameObject.SetActive(false);
+		m_AmDead = true;
+		m_PlayerAudio.clip = m_DeathClip;
+		m_PlayerAudio.Play();
+		m_Transform.GetChild(0).gameObject.SetActive (false);
+		//gameObject.SetActive(false);
 		Game.manager.GetComponent<GameManager>().CheckPlayersAlive();
 	}
 }

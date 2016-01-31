@@ -11,6 +11,7 @@ GameObject:
   - 33: {fileID: 3349788}
   - 23: {fileID: 2312878}
   - 65: {fileID: 6545604}
+  - 114: {fileID: 11420354}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -29,7 +30,6 @@ GameObject:
   - 33: {fileID: 3348504}
   - 135: {fileID: 13532068}
   - 23: {fileID: 2384444}
-  - 114: {fileID: 11420006}
   m_Layer: 0
   m_Name: Body
   m_TagString: Body
@@ -64,6 +64,8 @@ GameObject:
   - 114: {fileID: 11436158}
   - 54: {fileID: 5414904}
   - 95: {fileID: 9557544}
+  - 135: {fileID: 13576198}
+  - 114: {fileID: 11418058}
   m_Layer: 0
   m_Name: JoustySapien
   m_TagString: Untagged
@@ -240,20 +242,31 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 148450}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8ce26e34fcf1e74487087e892a8faca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11420006
+--- !u!114 &11418058
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 126290}
+  m_GameObject: {fileID: 170808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49fa69d5323d8fa44a84d52a7722ded7, type: 3}
+  m_Script: {fileID: 11500000, guid: 38b94f428c35b6942baec55b3f591f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11420354
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 119882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8ce26e34fcf1e74487087e892a8faca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &11436158
@@ -267,10 +280,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48af3beb3ce2ae548a1702b83ccdb742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Speed: 15
+  m_Speed: 30
   m_TurnSpeed: 180
   bodyObj: {fileID: 0}
-  m_PlayerNumber: 2
+  m_PlayerNumber: 1
+  m_Health: 3
 --- !u!135 &13532068
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -279,6 +293,18 @@ SphereCollider:
   m_GameObject: {fileID: 126290}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!135 &13576198
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 170808}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -297,6 +323,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Speed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_TagString
+      value: Body
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

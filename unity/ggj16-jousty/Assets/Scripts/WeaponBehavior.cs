@@ -16,7 +16,9 @@ public class WeaponBehavior : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.CompareTag("Body")) {
-			other.gameObject.transform.parent.gameObject.SetActive (false);
+			//other.gameObject.transform.parent.gameObject.SetActive (false);
+			other.gameObject.transform.parent.gameObject.GetComponent<PlayerBehavior>().Damage(1);
 		}
+		
 	}
 }

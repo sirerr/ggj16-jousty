@@ -21,6 +21,7 @@ public class PlayMusic : MonoBehaviour {
 		//Get a component reference to the AudioSource attached to the UI game object
 		musicSource = GetComponent<AudioSource> ();
 		//Call the PlayLevelMusic function to start playing music
+		PlayLevelMusic();
 	}
 
 
@@ -42,6 +43,7 @@ public class PlayMusic : MonoBehaviour {
 		FadeUp (resetTime);
 		//Play the assigned music clip in musicSource
 		musicSource.Play ();
+		Debug.Log("YUP");
 	}
 	
 	//Used if running the game in a single scene, takes an integer music source allowing you to choose a clip by number and play.

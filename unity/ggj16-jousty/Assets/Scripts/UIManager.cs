@@ -11,18 +11,39 @@ public class UIManager : MonoBehaviour {
 
     void Awake ()
     {
-        // spawn canvas if it is not already created?
+        Game.ui = this;
+        GameObject canvasObj = GameObject.Find("Canvas");
+        if (canvasObj != null)
+        {
+            Game.canvas = canvasObj.GetComponent<Canvas>();
+        }
+        else
+        {
+            Debug.Log("UIManager ERROR - canvas not found");
+            // spawn canvas if it is not already created?
+        }
+        playerList = new List<GameObject>();
     }
     
 	void Start () {
-        playerList = new List<GameObject>();
+        
 	}
 
-    public void RegisterPlayer(int id, string playerName, Color color) // Adds a player to the UI
+    public void SetupPlayerList(List<GameObject> list)
     {
+        //playerList = list;
+    }
+
+    public void RegisterPlayer(int id, string playerName, Color color) // Adds a player to the UI; note that this is zero-based
+    {
+        Debug.Log("Step 1");
         GameObject scoreboxObj = Instantiate<GameObject>(scoreboxPrefab);
+        scoreboxObj.transform.SetParent(Game.canvas.transform);
+        Debug.Log("Step 2");
         playerList.Add(scoreboxObj);
+        Debug.Log("Step 3");
         Scorebox scorebox = scoreboxObj.GetComponent<Scorebox>();
+        Debug.Log("Step 4");
         scorebox.SetName(playerName);
         scorebox.SetScore(0);
         scorebox.SetColor(color);

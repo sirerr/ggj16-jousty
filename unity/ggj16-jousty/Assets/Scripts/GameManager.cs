@@ -11,16 +11,16 @@ public class GameManager : MonoBehaviour {
 	private List<GameObject> playerList;
 	private int pausingPlayer;
 	public bool isPaused = false;
+	public float timer;
+	public bool gameOver;
 
 	// Use this for initialization
 	void Awake () {
 		Game.manager = this;
 		game_started = true;
 		GameStart();
-		Debug.Log("Hello World");
-		
-		
-	
+		gameOver = false;
+		timer = 5;	
 	}
 	
 	void GameStart() {
@@ -29,48 +29,84 @@ public class GameManager : MonoBehaviour {
 	
 		// Start music if not already started
 	
-		// Spawn UI
-	
 		SpawnPlayers();
-		
-		Debug.Log("Game Started");
+
+        //CreateUI(); // unneeded for now
+
+        Debug.Log("Game Started");
 	
 	
 	
 	}
 	// Update is called once per frame
 	void Update () {
-	
-	}
-	public void Foo() {
-	
-
-	}
-	
-	public void CheckPlayersAlive()
-	{
-		int numPlayersAlive = 0;
-		for (int i = 0; i < playerList.Count; i++)
-		{
-			if(playerList[i].GetComponent<PlayerBehavior>().IsAlive()) // is the player alive?
-			{
-				numPlayersAlive++;
+		if (gameOver) {
+			timer -= Time.deltaTime;
+			if (timer < 0) {
+				SceneManager.LoadScene(0);
 			}
 		}
-		if (numPlayersAlive < 2)
-		{
-			GameOver();
-		}
 	}
-	
-	public void GameOver() {
-		
-		// Fancy end of level stuff here
-		// Announce winner, etc
-		// May also immediately restart scene in the future
-		SceneManager.LoadScene(0);
-	
-	}
+
+    private void CreateUI()
+    {
+        for (int i = 0; i < playerList.Count; i++)
+        {
+            Debug.Log(i);
+            Game.ui.RegisterPlayer(i); // Note: UI is zero-based
+        }
+    }
+
+
+
+    public void CheckPlayersAlive()
+    {
+        int numPlayersAlive = 0;
+        int lastPlayerAlive = -1;
+        for (int i = 0; i < playerList.Count; i++)
+        {
+            if (playerList[i].GetComponent<PlayerBehavior>().IsAlive()) // is the player alive?
+            {
+                numPlayersAlive++;
+                lastPlayerAlive = i;
+            }
+        }
+        if (numPlayersAlive < 2)
+        {
+            GameOver(lastPlayerAlive+1);
+        }
+    }
+
+    public void GameOver(int victor)
+    {
+        gameOver = true;
+        if (victor == -1)
+        {
+            Game.victoryScreen.StartVictoryAnimation(Color.black);
+            //Game.messageBox.DisplayMessage("DRAW", 6000f);
+        }
+        else
+        {
+            Color bgColorVictory = Color.clear;
+            switch(victor)
+            {
+                case 1:
+                    bgColorVictory = new Color(0f, 0f, 1f, 0.25f);
+                    break;
+                case 2:
+                    bgColorVictory = new Color(1f, 0f, 0f, 0.25f);
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                default:
+                    break;
+            }
+            Game.victoryScreen.StartVictoryAnimation(bgColorVictory); // Add player colors here
+            //Game.messageBox.DisplayMessage("Player " + playerList[victor].GetComponent<PlayerBehavior>().m_PlayerNumber + " wins!", 1000f);
+        }
+    }
 	
 	public void TogglePause(int player)
 	{
@@ -107,9 +143,11 @@ public class GameManager : MonoBehaviour {
 	
 		GameObject playerOne = Instantiate(JoustySapien);
 		playerOne.GetComponent<PlayerBehavior>().m_PlayerNumber = 1;
+		playerOne.GetComponent<PlayerBehavior>().ChangeColor (Color.blue);
 		playerOne.transform.position = startPositions[positionNumbers[0]];
 		GameObject playerTwo = Instantiate(JoustySapien);
 		playerTwo.GetComponent<PlayerBehavior>().m_PlayerNumber = 2;
+		playerTwo.GetComponent<PlayerBehavior>().ChangeColor (Color.red);
 		playerTwo.transform.position = startPositions[positionNumbers[1]];
 		
 		playerList = new List<GameObject>();

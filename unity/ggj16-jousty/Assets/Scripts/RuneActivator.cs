@@ -12,21 +12,25 @@ public class RuneActivator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		dictionary.Add("MichaelSmellsLikeCylinder", 1);
-		dictionary.Add("Pillar2", 2);
-		dictionary.Add("Pillar3", 3);
-		dictionary.Add("Pillar4", 4);
+		dictionary.Add("MichaelSmellsLikeCylinder", 5);
+		dictionary.Add("PaulEatsPoop", 1);
+		dictionary.Add("StephenLikesNickelback", 2);
+		dictionary.Add("LeonardWalksBackwards", 3);
+		dictionary.Add("CDUsesCheatCodes", 4);
 		
 		ritualdictionary.Add("1234", "TestRitual");
+		ritualdictionary.Add("12", "Speed");
+		ritualdictionary.Add("34", "Speed");
+		ritualdictionary.Add("13", "Fire");
+		ritualdictionary.Add("24", "Fire");
 		
 		
 		queue = new Queue<int>();
 		
 		queue.Enqueue(0);
 		queue.Enqueue(0);
-		queue.Enqueue(0);
-		queue.Enqueue(0);
-	
+		//queue.Enqueue(0);
+		//queue.Enqueue(0);
 	}
 	
 	// Update is called once per frame
@@ -36,7 +40,7 @@ public class RuneActivator : MonoBehaviour {
 	void OnCollisionEnter(Collision collision){
 	
 		//Debug.Log("test");
-		if( dictionary.ContainsKey(collision.gameObject.name)){
+		if( dictionary.ContainsKey(collision.gameObject.name) && queue.ToArray()[1] != dictionary[collision.gameObject.name]){
 			int value = dictionary[collision.gameObject.name];
 			Debug.Log("Hit" + value);
 			
@@ -52,7 +56,22 @@ public class RuneActivator : MonoBehaviour {
 			if( ritualdictionary.ContainsKey(queuestring)){
 				string ritualstring = ritualdictionary[queuestring];
 				Debug.Log("YAY");
-				Game.manager.Foo();
+				switch (ritualstring) {
+					case "TestRitual":
+						Debug.Log("TestRitual");
+						break;
+					case "Speed":
+						gameObject.GetComponent<PlayerBehavior> ().SpeedBoost ();
+						break;
+					case "Fire":
+						gameObject.GetComponent<PlayerBehavior> ().FireSpear ();
+						break;
+					default:
+						Debug.Log("Should Never Happen");
+						break;
+				}
+
+				//Game.manager.Foo();
 			
 			
 			}
